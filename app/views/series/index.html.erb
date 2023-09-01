@@ -1,0 +1,7 @@
+<h1>List of Series</h1>
+
+<ul>
+  <% @series.each do |series| %>
+    <li><%= series['nome_origem'] %></li>
+  <% end %>
+</ul>

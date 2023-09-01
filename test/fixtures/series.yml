@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  nome_pt: MyString
+  nome_origem: MyString
+  pais: MyString
+  popularidade: 1
+  media_votacao: 
+  sinopse: MyText
+  url_foto: MyString
+
+two:
+  nome_pt: MyString
+  nome_origem: MyString
+  pais: MyString
+  popularidade: 1
+  media_votacao: 
+  sinopse: MyText
+  url_foto: MyString
