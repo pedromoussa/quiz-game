@@ -1,5 +1,5 @@
 ActiveAdmin.register Series do
-  actions :index, :show
+  actions :index, :show, :new, :create
 
   index do
     selectable_column
@@ -8,9 +8,15 @@ ActiveAdmin.register Series do
     column :pais
     column :popularidade
     column :media_votacao
-    column 'Elenco' do |series|
-      link_to 'Ver Elenco', cast_admin_series_path(series)
-    end
+
+    actions defaults: false do |series|
+      action_item :fetch_cast, only: :show do
+        link_to 'Buscar Elenco', fetch_cast_admin_series_path(series), method: :post
+      end
+  
+      action_item :import_series, only: :show do
+        link_to 'Importar Série', import_series_admin_series_path(series), method: :post
+      end
     actions
   end
 
@@ -22,22 +28,36 @@ ActiveAdmin.register Series do
   filter :popularidade, as: :numeric
   filter :media_votacao, as: :numeric
 
+  action_item :fetch_series, only: :index do
+    link_to 'Buscar Séries', fetch_series_admin_series_path
+  end
+
+  # importa todas as series recebidas pela api
+  # collection_action :fetch_series, method: :get do
+  #   series = TmdbService.fetch_series
+  #   if series.present?
+  #     series.each do |serie|
+  #       Series.create(serie) if !Series.find_by(nome_origem: serie[:nome_origem])
+  #     end
+  #     redirect_to admin_series_path, notice: "Série importada com sucesso"
+  #   end
+  # end
+
   member_action :fetch_series, method: :get do
-    # Code to fetch data from the external API
-    # You can display the fetched data to the admin for review
   end
 
+  member_action :fetch_cast, method: :post do
+    series = Series.find(params[:id])
+    TmdbService.fetch_cast(series.series_id)
+  
+    redirect_to admin_series_path, notice: 'Elenco buscado com sucesso'
+  end
+  
   member_action :import_series, method: :post do
-    # Code to import the Series data
-    # For example, you can make an API call to fetch and import the data
-    # Once imported, you can create or update Series records in your database
-    redirect_to admin_series_path(resource), notice: 'Series imported successfully'
-  end
-
-  member_action :cast do
-    # Code to fetch and display the cast of the selected Series
-    # You can make an API call to get the cast data
-    # Display the cast members or any relevant information
+    series = Series.find(params[:id])
+    TmdbService.import_series(series.series_id)
+  
+    redirect_to admin_series_path, notice: 'Série importada com sucesso'
   end
 
   show do
