@@ -44,13 +44,20 @@ ActiveAdmin.register Series do
   # end
 
   member_action :fetch_series, method: :get do
+    num_series = params[:num_series] || 10 # valor default para testes
+    @series_data = TmdbService.fetch_series(page: 1, per_page: num_series) 
+
+    if @series_data.present?
+      render partial: 'admin/series/fetched_series', locals: { series_data: @series_data }
+    else
+      redirect_to admin_series_path, alert: 'Falha ao buscar séries'
+    end
   end
 
   member_action :fetch_cast, method: :post do
     series = Series.find(params[:id])
-    TmdbService.fetch_cast(series.series_id)
-  
-    redirect_to admin_series_path, notice: 'Elenco buscado com sucesso'
+    @cast_data = TmdbService.fetch_cast(series.series_id)
+    render 'admin/characters/index'
   end
   
   member_action :import_series, method: :post do
