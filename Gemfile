@@ -65,3 +65,5 @@ gem "activeadmin", "~> 2.9"
 
 gem "devise", "~> 4.9"
 gem "cancancan", "~> 3.5"
+
+gem "slim-rails"

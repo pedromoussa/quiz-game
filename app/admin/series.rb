@@ -1,5 +1,5 @@
 ActiveAdmin.register Series do
-  actions :index, :show, :new, :create
+  actions :index, :show
 
   index do
     selectable_column
@@ -17,20 +17,17 @@ ActiveAdmin.register Series do
       action_item :import_series, only: :show do
         link_to 'Importar Série', import_series_admin_series_path(series), method: :post
       end
+    end
     actions
   end
 
   filter :nome_pt, as: :string
   filter :nome_origem, as: :string
   filter :pais, as: :select, collection: Series.pluck(:pais).uniq
-  # filter :popularidade, as: :numeric_range
-  # filter :media_votacao, as: :numeric_range
   filter :popularidade, as: :numeric
   filter :media_votacao, as: :numeric
-
-  action_item :fetch_series, only: :index do
-    link_to 'Buscar Séries', fetch_series_admin_series_path
-  end
+  # filter :popularidade, as: :numeric_range
+  # filter :media_votacao, as: :numeric_range
 
   # importa todas as series recebidas pela api
   # collection_action :fetch_series, method: :get do
@@ -43,21 +40,30 @@ ActiveAdmin.register Series do
   #   end
   # end
 
-  member_action :fetch_series, method: :get do
-    num_series = params[:num_series] || 10 # valor default para testes
-    @series_data = TmdbService.fetch_series(page: 1, per_page: num_series) 
+  # action_item :fetch_series do
+  #   link_to "Buscar Séries", "/admin/series/this_fetch_series"
+  # end
 
-    if @series_data.present?
-      render partial: 'admin/series/fetched_series', locals: { series_data: @series_data }
-    else
-      redirect_to admin_series_path, alert: 'Falha ao buscar séries'
-    end
-  end
+  # collection_action :fetch_series, method: :get do
+  #   num_series = params[:num_series] || 10 # valor default para testes
+  #   @series_data = TmdbService.fetch_series(page: 1, per_page: num_series)
+    
+  #   if @series_data.present?
+  #     render partial: 'admin/series/fetched_series', locals: {series_data: @series_data}
+  #   else
+  #     redirect_to admin_series_path, alert: 'Falha ao buscar séries'
+  #   end
+  # end
 
   member_action :fetch_cast, method: :post do
     series = Series.find(params[:id])
     @cast_data = TmdbService.fetch_cast(series.series_id)
-    render 'admin/characters/index'
+
+    if @cast_data.present?
+      render 'admin/characters/fetched_cast', locals: { cast_data: @cast_data }
+    else
+      redirect_to admin_cast_path, alert: 'Falha ao buscar o elenco'
+    end
   end
   
   member_action :import_series, method: :post do
@@ -65,6 +71,10 @@ ActiveAdmin.register Series do
     TmdbService.import_series(series.series_id)
   
     redirect_to admin_series_path, notice: 'Série importada com sucesso'
+  end
+
+  action_item :fetch_series do
+    link_to "Buscar Séries", "/admin/seriesimport/fetch_series", method: :get
   end
 
   show do
@@ -78,13 +88,13 @@ ActiveAdmin.register Series do
       row 'Elenco' do
         link_to 'Ver Elenco', cast_admin_series_path(series)
       end
-      row 'Buscar Séries' do
-        link_to 'Buscar Séries', fetch_data_admin_series_path(series), method: :get
-      end
+      # row 'Buscar Séries' do
+      #   link_to 'Buscar Séries', fetch_data_admin_series_path(series), method: :get
+      # end
       row 'Importar Série' do
         link_to 'Importar Série', import_data_admin_series_path(series), method: :post
       end
     end
   end
-  
+
 end
