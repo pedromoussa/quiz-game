@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_09_01_163054) do
+ActiveRecord::Schema.define(version: 2023_09_06_192245) do
 
   create_table "active_admin_comments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci", force: :cascade do |t|
     t.string "namespace"
@@ -42,8 +42,10 @@ ActiveRecord::Schema.define(version: 2023_09_01_163054) do
     t.string "nome_personagem"
     t.string "nome_real"
     t.string "url_foto"
+    t.bigint "series_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["series_id"], name: "index_characters_on_series_id"
   end
 
   create_table "quizzes", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci", force: :cascade do |t|
@@ -66,6 +68,7 @@ ActiveRecord::Schema.define(version: 2023_09_01_163054) do
     t.string "url_foto"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "id_tmdb"
   end
 
   create_table "user_answers", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci", force: :cascade do |t|
@@ -91,6 +94,7 @@ ActiveRecord::Schema.define(version: 2023_09_01_163054) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "characters", "series"
   add_foreign_key "quizzes", "characters"
   add_foreign_key "quizzes", "series"
   add_foreign_key "user_answers", "quizzes"

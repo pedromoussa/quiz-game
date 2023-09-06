@@ -1,3 +1,3 @@
 class Series < ApplicationRecord
-  has_one :character 
+  has_many :character 
 end

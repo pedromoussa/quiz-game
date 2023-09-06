@@ -8,7 +8,7 @@ class CreateSeries < ActiveRecord::Migration[5.2]
       t.float :media_votacao
       t.text :sinopse
       t.string :url_foto
-
+      
       t.timestamps
     end
   end

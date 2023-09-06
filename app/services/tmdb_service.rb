@@ -6,7 +6,8 @@ class TmdbService
 
   API_KEY = "5d1461001d40cb2ec078b29f176d1115"
 
-  def self.fetch_series(page = 1, per_page = 10) # change per_page = 100 later 
+  def self.fetch_series(page, per_page = 10) # change per_page = 100 later 
+    page = rand(1..99)
     url = URI("https://api.themoviedb.org/3/tv/popular?language=en-US&page=#{page}&api_key=#{API_KEY}")
     http = Net::HTTP.new(url.host, url.port)
     http.use_ssl = true
@@ -24,7 +25,8 @@ class TmdbService
           popularidade: series["popularity"],
           media_votacao: series["vote_average"],
           url_foto: series["poster_path"],
-          sinopse: series["overview"]
+          sinopse: series["overview"],
+          id_tmdb: series["id"], 
         }
       end
       series
@@ -37,13 +39,13 @@ class TmdbService
     url = URI("https://api.themoviedb.org/3/tv/#{series_id}/credits?language=en-US&api_key=#{API_KEY}")
     http = Net::HTTP.new(url.host, url.port)
     http.use_ssl = true
-    request = Ner::HTTP::Get.new(url)
+    request = Net::HTTP::Get.new(url)
     request["accept"] = "application/json"
     response = http.request(request)
     
     if response.code == "200"
       cast_data = JSON.parse(response.body)
-      cast = cast_data["results"].map do |cast|
+      cast = cast_data["cast"].map do |cast|
         {
           nome_personagem: cast["character"],
           nome_real: cast["name"],

@@ -9,12 +9,6 @@ ActiveAdmin.register Series do
     column :popularidade
     column :media_votacao
 
-    # actions defaults: false do |series|
-    #   action_item :fetch_cast, only: :show do
-    #     link_to 'Buscar Elenco', fetch_cast_admin_series_path(series), method: :post
-    #   end
-      
-    # end
     actions
   end
 
@@ -26,35 +20,33 @@ ActiveAdmin.register Series do
   # filter :popularidade, as: :numeric_range
   # filter :media_votacao, as: :numeric_range
 
-  # member_action :fetch_cast, method: :post do
-  #   series = Series.find(params[:id])
-  #   @cast_data = TmdbService.fetch_cast(series.series_id)
-
-  #   if @cast_data.present?
-  #     render 'admin/characters/fetched_cast', locals: { cast_data: @cast_data }
-  #   else
-  #     redirect_to admin_cast_path, alert: 'Falha ao buscar o elenco'
-  #   end
-  # end
-
   collection_action :import_series, method: :post do
     num_series = params[:num_series] || 10 # valor default para testes
     @series_data = TmdbService.fetch_series(page: 1, per_page: num_series) 
 
     if @series_data.present?
       @series_data.each do |series|
-        Series.create(series) if !Series.find_by(nome_origem: series[:nome_origem])
-        @cast_data = TmdbService.fetch_cast(series.id)
-        if @cast_data.present?
-          @cast_data.each do |character|
-            Character.create(character)
+
+        if !Series.find_by(nome_origem: series[:nome_origem])
+          @new_series = Series.create(series)
+          @cast_data = TmdbService.fetch_cast(series[:id_tmdb])
+
+          if @cast_data.present?
+            @cast_data.each do |character|
+              new_char = character.merge({series: @new_series})
+              p new_char
+              new_character = Character.new(new_char)
+              p new_character.valid?
+              p new_character.errors
+              
+            end
           end
-        else
-          redirect_to admin_cast_path, alert: 'Falha ao buscar o elenco'
+
         end
+
       end
     else
-      redirect_to admin_series_path, alert: 'Falha ao buscar series'
+      redirect_to "admin/series", alert: 'Falha ao buscar series'
     end
   end
 
