@@ -10,7 +10,7 @@ Rails.application.routes.draw do
       post 'fetch_cast'
     end
   end
-  namespace :admin do
-    get 'this_fetch_series', to: 'series#this_fetch_series'
-  end
+  # namespace :admin do
+  #   get 'this_fetch_series', to: 'series#this_fetch_series'
+  # end
 end

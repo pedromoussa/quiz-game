@@ -9,15 +9,12 @@ ActiveAdmin.register Series do
     column :popularidade
     column :media_votacao
 
-    actions defaults: false do |series|
-      action_item :fetch_cast, only: :show do
-        link_to 'Buscar Elenco', fetch_cast_admin_series_path(series), method: :post
-      end
-  
-      action_item :import_series, only: :show do
-        link_to 'Importar Série', import_series_admin_series_path(series), method: :post
-      end
-    end
+    # actions defaults: false do |series|
+    #   action_item :fetch_cast, only: :show do
+    #     link_to 'Buscar Elenco', fetch_cast_admin_series_path(series), method: :post
+    #   end
+      
+    # end
     actions
   end
 
@@ -29,52 +26,40 @@ ActiveAdmin.register Series do
   # filter :popularidade, as: :numeric_range
   # filter :media_votacao, as: :numeric_range
 
-  # importa todas as series recebidas pela api
-  # collection_action :fetch_series, method: :get do
-  #   series = TmdbService.fetch_series
-  #   if series.present?
-  #     series.each do |serie|
-  #       Series.create(serie) if !Series.find_by(nome_origem: serie[:nome_origem])
-  #     end
-  #     redirect_to admin_series_path, notice: "Série importada com sucesso"
-  #   end
-  # end
+  # member_action :fetch_cast, method: :post do
+  #   series = Series.find(params[:id])
+  #   @cast_data = TmdbService.fetch_cast(series.series_id)
 
-  # action_item :fetch_series do
-  #   link_to "Buscar Séries", "/admin/series/this_fetch_series"
-  # end
-
-  # collection_action :fetch_series, method: :get do
-  #   num_series = params[:num_series] || 10 # valor default para testes
-  #   @series_data = TmdbService.fetch_series(page: 1, per_page: num_series)
-    
-  #   if @series_data.present?
-  #     render partial: 'admin/series/fetched_series', locals: {series_data: @series_data}
+  #   if @cast_data.present?
+  #     render 'admin/characters/fetched_cast', locals: { cast_data: @cast_data }
   #   else
-  #     redirect_to admin_series_path, alert: 'Falha ao buscar séries'
+  #     redirect_to admin_cast_path, alert: 'Falha ao buscar o elenco'
   #   end
   # end
 
-  member_action :fetch_cast, method: :post do
-    series = Series.find(params[:id])
-    @cast_data = TmdbService.fetch_cast(series.series_id)
+  collection_action :import_series, method: :post do
+    num_series = params[:num_series] || 10 # valor default para testes
+    @series_data = TmdbService.fetch_series(page: 1, per_page: num_series) 
 
-    if @cast_data.present?
-      render 'admin/characters/fetched_cast', locals: { cast_data: @cast_data }
+    if @series_data.present?
+      @series_data.each do |series|
+        Series.create(series) if !Series.find_by(nome_origem: series[:nome_origem])
+        @cast_data = TmdbService.fetch_cast(series.id)
+        if @cast_data.present?
+          @cast_data.each do |character|
+            Character.create(character)
+          end
+        else
+          redirect_to admin_cast_path, alert: 'Falha ao buscar o elenco'
+        end
+      end
     else
-      redirect_to admin_cast_path, alert: 'Falha ao buscar o elenco'
+      redirect_to admin_series_path, alert: 'Falha ao buscar series'
     end
   end
-  
-  member_action :import_series, method: :post do
-    series = Series.find(params[:id])
-    TmdbService.import_series(series.series_id)
-  
-    redirect_to admin_series_path, notice: 'Série importada com sucesso'
-  end
 
-  action_item :fetch_series do
-    link_to "Buscar Séries", "/admin/seriesimport/fetch_series", method: :get
+  action_item :import_series do
+    link_to "Importar séries", "/admin/series/import_series", method: :post
   end
 
   show do
@@ -84,15 +69,11 @@ ActiveAdmin.register Series do
       row :pais
       row :popularidade
       row :media_votacao
+      row :sinopse
+      row :url_foto
 
       row 'Elenco' do
-        link_to 'Ver Elenco', cast_admin_series_path(series)
-      end
-      # row 'Buscar Séries' do
-      #   link_to 'Buscar Séries', fetch_data_admin_series_path(series), method: :get
-      # end
-      row 'Importar Série' do
-        link_to 'Importar Série', import_data_admin_series_path(series), method: :post
+        link_to 'Ver Elenco', "/admin/characters"
       end
     end
   end
