@@ -1,5 +1,5 @@
 class Quiz < ApplicationRecord
   has_many :user_answers
-  belongs_to :series
-  belongs_to :character
+  has_many :series
+  has_one :character
 end
