@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+
   devise_for :users
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
@@ -10,7 +11,7 @@ Rails.application.routes.draw do
       post 'fetch_cast'
     end
   end
-  # namespace :admin do
-  #   get 'this_fetch_series', to: 'series#this_fetch_series'
-  # end
+  namespace :admin do
+    resources :quizzes
+  end
 end

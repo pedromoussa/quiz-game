@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_09_08_204635) do
+ActiveRecord::Schema.define(version: 2023_09_11_164403) do
 
   create_table "active_admin_comments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.string "namespace"
@@ -50,13 +50,24 @@ ActiveRecord::Schema.define(version: 2023_09_08_204635) do
     t.index ["series_id"], name: "index_characters_on_series_id"
   end
 
+  create_table "quiz_series", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
+    t.bigint "quiz_id"
+    t.bigint "series_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["quiz_id"], name: "index_quiz_series_on_quiz_id"
+    t.index ["series_id"], name: "index_quiz_series_on_series_id"
+  end
+
   create_table "quizzes", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.string "nome"
     t.bigint "series_id"
     t.bigint "character_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "main_series_id"
     t.index ["character_id"], name: "index_quizzes_on_character_id"
+    t.index ["main_series_id"], name: "index_quizzes_on_main_series_id"
     t.index ["series_id"], name: "index_quizzes_on_series_id"
   end
 
@@ -100,8 +111,11 @@ ActiveRecord::Schema.define(version: 2023_09_08_204635) do
 
   add_foreign_key "characters", "quizzes"
   add_foreign_key "characters", "series"
+  add_foreign_key "quiz_series", "quizzes"
+  add_foreign_key "quiz_series", "series"
   add_foreign_key "quizzes", "characters"
   add_foreign_key "quizzes", "series"
+  add_foreign_key "quizzes", "series", column: "main_series_id"
   add_foreign_key "series", "quizzes"
   add_foreign_key "user_answers", "quizzes"
   add_foreign_key "user_answers", "users"
