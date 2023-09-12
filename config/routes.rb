@@ -11,7 +11,17 @@ Rails.application.routes.draw do
       post 'fetch_cast'
     end
   end
-  namespace :admin do
-    resources :quizzes
+
+  # rotas api
+  namespace :api do
+    namespace :v1, defaults: { format: :json } do
+
+      post 'login',     to: "login#login"
+      post 'resposta',  to: "resposta#resposta"
+      get  'questao',   to: "questao#questao"
+      get  'placar',    to: "placar#placar"
+
+    end
   end
+
 end

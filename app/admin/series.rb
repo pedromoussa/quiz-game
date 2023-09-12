@@ -32,11 +32,6 @@ ActiveAdmin.register Series do
 
         if @cast_data.present?
           @cast_data.each do |character|
-            # new_char = character.merge({series: @new_series})
-            # p new_char
-            # new_character = Character.new(new_char)
-            # p new_character.valid?
-            # p new_character.errors
             new_series.character.create(character)
           end
         end

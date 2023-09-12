@@ -10,9 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_09_11_164403) do
+ActiveRecord::Schema.define(version: 2023_09_12_183321) do
 
-  create_table "active_admin_comments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
+  create_table "active_admin_comments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
     t.string "resource_type"
@@ -26,7 +26,7 @@ ActiveRecord::Schema.define(version: 2023_09_11_164403) do
     t.index ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id"
   end
 
-  create_table "admin_users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
+  create_table "admin_users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
@@ -38,40 +38,27 @@ ActiveRecord::Schema.define(version: 2023_09_11_164403) do
     t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
   end
 
-  create_table "characters", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
+  create_table "characters", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci", force: :cascade do |t|
     t.string "nome_personagem"
     t.string "nome_real"
     t.string "url_foto"
     t.bigint "series_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "quiz_id"
-    t.index ["quiz_id"], name: "index_characters_on_quiz_id"
     t.index ["series_id"], name: "index_characters_on_series_id"
   end
 
-  create_table "quiz_series", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
-    t.bigint "quiz_id"
-    t.bigint "series_id"
+  create_table "placars", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["quiz_id"], name: "index_quiz_series_on_quiz_id"
-    t.index ["series_id"], name: "index_quiz_series_on_series_id"
+    t.integer "questoes"
+    t.integer "acertos"
+    t.float "percentual"
+    t.bigint "user_id"
+    t.index ["user_id"], name: "index_placars_on_user_id"
   end
 
-  create_table "quizzes", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
-    t.string "nome"
-    t.bigint "series_id"
-    t.bigint "character_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.bigint "main_series_id"
-    t.index ["character_id"], name: "index_quizzes_on_character_id"
-    t.index ["main_series_id"], name: "index_quizzes_on_main_series_id"
-    t.index ["series_id"], name: "index_quizzes_on_series_id"
-  end
-
-  create_table "series", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
+  create_table "series", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci", force: :cascade do |t|
     t.string "nome_pt"
     t.string "nome_origem"
     t.string "pais"
@@ -82,21 +69,19 @@ ActiveRecord::Schema.define(version: 2023_09_11_164403) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "id_tmdb"
-    t.bigint "quiz_id"
-    t.index ["quiz_id"], name: "index_series_on_quiz_id"
   end
 
-  create_table "user_answers", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
+  create_table "user_answers", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci", force: :cascade do |t|
     t.bigint "user_id"
-    t.bigint "quiz_id"
-    t.string "resposta"
+    t.string "mensagem"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["quiz_id"], name: "index_user_answers_on_quiz_id"
+    t.string "series_id"
+    t.string "character_id"
     t.index ["user_id"], name: "index_user_answers_on_user_id"
   end
 
-  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
+  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
@@ -104,19 +89,12 @@ ActiveRecord::Schema.define(version: 2023_09_11_164403) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "placar"
+    t.string "username"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "characters", "quizzes"
   add_foreign_key "characters", "series"
-  add_foreign_key "quiz_series", "quizzes"
-  add_foreign_key "quiz_series", "series"
-  add_foreign_key "quizzes", "characters"
-  add_foreign_key "quizzes", "series"
-  add_foreign_key "quizzes", "series", column: "main_series_id"
-  add_foreign_key "series", "quizzes"
-  add_foreign_key "user_answers", "quizzes"
+  add_foreign_key "placars", "users"
   add_foreign_key "user_answers", "users"
 end

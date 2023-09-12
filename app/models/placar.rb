@@ -1,0 +1,2 @@
+class Placar < ApplicationRecord
+end
