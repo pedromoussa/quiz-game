@@ -8,7 +8,7 @@ class TmdbService
 
   def self.fetch_series(page, per_page = 10) # change per_page = 100 later 
     page = rand(1..99)
-    url = URI("https://api.themoviedb.org/3/tv/popular?language=en-US&page=#{page}&api_key=#{API_KEY}")
+    url = URI("https://api.themoviedb.org/3/tv/popular?language=pt-BR&page=#{page}&api_key=#{API_KEY}")
     http = Net::HTTP.new(url.host, url.port)
     http.use_ssl = true
     request = Net::HTTP::Get.new(url)
@@ -20,7 +20,7 @@ class TmdbService
       series = series_data["results"].take(per_page).map do |series|
         {
           nome_origem: series["original_name"],
-          nome_pt: "",  # translate later...
+          nome_pt: series["name"],
           pais: series["origin_country"],
           popularidade: series["popularity"],
           media_votacao: series["vote_average"],
@@ -36,7 +36,7 @@ class TmdbService
   end
 
   def self.fetch_cast(series_id)
-    url = URI("https://api.themoviedb.org/3/tv/#{series_id}/credits?language=en-US&api_key=#{API_KEY}")
+    url = URI("https://api.themoviedb.org/3/tv/#{series_id}/credits?language=pt-BR&api_key=#{API_KEY}")
     http = Net::HTTP.new(url.host, url.port)
     http.use_ssl = true
     request = Net::HTTP::Get.new(url)

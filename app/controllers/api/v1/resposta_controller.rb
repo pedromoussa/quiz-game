@@ -18,7 +18,7 @@ class Api::V1::RespostaController < ApplicationController
       mensagem = "Parabens, você acertou!"
       status = 200
     else
-      mensagem = "Não estou bravo, apenas decepcionado..."
+      mensagem = "Não estou bravo, apenas decepcionado... A resposta era: #{Series.find(series_id)}"
       status = 422
     end
 

@@ -14,7 +14,7 @@ ActiveAdmin.register Series do
 
   filter :nome_pt, as: :string
   filter :nome_origem, as: :string
-  # filter :pais, as: :select, collection: Series.pluck(:pais).uniq
+  filter :pais, as: :select, collection: Series.pluck(:pais).uniq
   filter :popularidade, as: :numeric
   filter :media_votacao, as: :numeric
   # filter :popularidade, as: :numeric_range
