@@ -65,3 +65,6 @@ gem "activeadmin", "~> 2.9"
 
 gem "devise", "~> 4.9"
 gem "cancancan", "~> 3.5"
+
+gem 'jwt'
+gem 'bcrypt', '~> 3.1.7'

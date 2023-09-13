@@ -1,4 +1,5 @@
 class Api::V1::QuestaoController < ApplicationController
+  before_action :authorize_request
 
   # retorna nome/id de um personagem e nome/nome_original/id da serie correta e 3 outras
   def questao
@@ -13,7 +14,6 @@ class Api::V1::QuestaoController < ApplicationController
     serie_2 = { "id" => other_series[1].id, "nome" => other_series[1].nome_pt, "nome_original" => other_series[1].nome_origem }
     serie_3 = { "id" => other_series[2].id, "nome" => other_series[2].nome_pt, "nome_original" => other_series[2].nome_origem }
 
-    #criar resposta em json e retornar
     questao = { "personagem" => personagem, "series" => [serie_certa, serie_1, serie_2, serie_3] }
     
     render json: questao.to_json, status: 200
