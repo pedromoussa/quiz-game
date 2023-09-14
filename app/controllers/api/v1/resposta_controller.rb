@@ -3,6 +3,7 @@ class Api::V1::RespostaController < ApplicationController
   protect_from_forgery
 
   def resposta()
+    authorize! :resposta, :user
 
     character_id = params[:character_id]
     series_id = params[:series_id]
@@ -18,7 +19,7 @@ class Api::V1::RespostaController < ApplicationController
       mensagem = "Parabens, você acertou!"
       status = 200
     else
-      mensagem = "Não estou bravo, apenas decepcionado... A resposta era: #{Series.find(series_id)}"
+      mensagem = "Não estou bravo, apenas decepcionado... A resposta correta era: #{Series.find(series_id)}"
       status = 422
     end
 

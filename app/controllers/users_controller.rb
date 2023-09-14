@@ -1,6 +1,4 @@
 class UsersController < ApplicationController
-  before_action :authorize_request, except: :create
-  before_action :find_user, except: %i[create index]
   protect_from_forgery
   
   # GET /users

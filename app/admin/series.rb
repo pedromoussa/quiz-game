@@ -17,8 +17,6 @@ ActiveAdmin.register Series do
   filter :pais, as: :select, collection: Series.pluck(:pais).uniq
   filter :popularidade, as: :numeric
   filter :media_votacao, as: :numeric
-  # filter :popularidade, as: :numeric_range
-  # filter :media_votacao, as: :numeric_range
 
   collection_action :import_series, method: :post do
     num_series = params[:num_series] || 10 # valor default para testes

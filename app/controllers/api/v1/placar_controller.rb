@@ -2,6 +2,7 @@ class Api::V1::PlacarController < ApplicationController
   before_action :authorize_request
 
   def placar
+    authorize! :placar, :user
 
     token = request.headers["Authorization"].split(' ')[1]
     user_hash = JsonWebToken.decode(token)
@@ -31,7 +32,9 @@ class Api::V1::PlacarController < ApplicationController
     placar = Placar.find_or_create_by(user_id: user_id)
     placar.update(:questoes => n_respostas, :acertos => n_acertos, :percentual => percentual)
 
-    render json: placar.to_json, status: 200
+    res = {:questoes => placar.questoes, :acertos => placar.acertos, :percentual => placar.percentual}
+
+    render json: res.to_json, status: 200
 
   end
 

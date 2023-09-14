@@ -3,6 +3,7 @@ class Api::V1::QuestaoController < ApplicationController
 
   # retorna nome/id de um personagem e nome/nome_original/id da serie correta e 3 outras
   def questao
+    authorize! :questao, :user
 
     character = Character.order("RAND()").first
     associated_series = Series.find_by(id: character.series_id)

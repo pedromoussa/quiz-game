@@ -68,3 +68,7 @@ gem "cancancan", "~> 3.5"
 
 gem 'jwt'
 gem 'bcrypt', '~> 3.1.7'
+
+group :development, :test do
+  gem 'rspec-rails', '~> 4.1.0'
+end
