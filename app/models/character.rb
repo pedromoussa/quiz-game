@@ -1,4 +1,5 @@
 class Character < ApplicationRecord
   belongs_to :series
-  # belongs_to :quiz
+
+  validates :nome_personagem, :nome_real, presence: true
 end

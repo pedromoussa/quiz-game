@@ -17,7 +17,7 @@ class Api::V1::PlacarController < ApplicationController
       return
     end
 
-    n_acertos = 0.0
+    n_acertos = 0
     respostas.each do |resposta|
       if resposta.mensagem.start_with? "Parabens"
         n_acertos += 1
@@ -26,7 +26,7 @@ class Api::V1::PlacarController < ApplicationController
 
     n_erros = n_respostas - n_acertos
     if n_respostas > 0
-      percentual = n_acertos/n_respostas*100
+      percentual = n_acertos.to_f/n_respostas*100
     end
 
     placar = Placar.find_or_create_by(user_id: user_id)

@@ -332,4 +332,9 @@ ActiveAdmin.setup do |config|
   # You can switch to using Webpacker here.
   #
   # config.use_webpacker = true
+  
+  # config.register_javascript 'custom_filters.js'
+  # config.register_input_type :range_filter, RangeFilterInput
+
+  # config.register_input_type :range_filter, RangeFilterInput
 end

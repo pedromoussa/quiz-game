@@ -15,8 +15,18 @@ ActiveAdmin.register Series do
   filter :nome_pt, as: :string
   filter :nome_origem, as: :string
   filter :pais, as: :select, collection: Series.pluck(:pais).uniq
-  filter :popularidade, as: :numeric
-  filter :media_votacao, as: :numeric
+  # filter :popularidade, as: :numeric
+  # filter :media_votacao, as: :numeric
+
+  filter :popularidade, as: :range_filter, label: "Popularidade Range" do |field|
+    field.text_field :q_popularidade_gteq, placeholder: "Popularidade Min"
+    field.text_field :q_popularidade_lteq, placeholder: "Popularidade Max"
+  end
+
+  filter :media_votacao, as: :range_filter, label: "Media Votacao Range" do |field|
+    field.text_field :q_media_votacao_gteq, placeholder: "Media Votacao Min"
+    field.text_field :q_media_votacao_lteq, placeholder: "Media Votacao Max"
+  end
 
   collection_action :import_series, method: :post do
     num_series = params[:num_series] || 10 # valor default para testes
@@ -30,7 +40,9 @@ ActiveAdmin.register Series do
 
         if @cast_data.present?
           @cast_data.each do |character|
-            new_series.character.create(character)
+            unless character["nome_personagem"] =~ /^(Self|Host|\s*)$/i
+              new_series.character.create(character)
+            end
           end
         end
       end
