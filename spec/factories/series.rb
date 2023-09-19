@@ -1,12 +1,12 @@
 FactoryBot.define do
 	factory :series do
-		nome_pt { "alto da compadecida" }
-		nome_origem { "high of the compadecida" }
-		pais { "antartica" }
-		popularidade { 11111 }
-		media_votacao { 1.1 }
-		sinopse { "era uma vez um final feliz" }
+		nome_pt { Faker::Lorem.word }
+		nome_origem { Faker::Lorem.word }
+		pais { Faker::Lorem.word }
+		popularidade { rand(1..1000) }
+		media_votacao { rand(0..10).to_f }
+		sinopse { Faker::Lorem.sentences }
 		url_foto { "/asgghasghas.jpg" }
-		id_tmdb { "12345" }
+		id_tmdb { rand(1..1000) }
 	end
 end

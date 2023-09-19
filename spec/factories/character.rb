@@ -1,7 +1,7 @@
 FactoryBot.define do
 	factory :character do
-		nome_personagem { "bela adormecida" }
-		nome_real { "vampeta" }
+		nome_personagem { Faker::Name.name }
+		nome_real { Faker::Name.name }
 		url_foto { "/asghasghasgh.jpg" }
 		series
 	end

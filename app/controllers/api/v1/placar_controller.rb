@@ -13,7 +13,7 @@ class Api::V1::PlacarController < ApplicationController
 
     if n_respostas == 0
       err = "Não foi possível recuperar o placar, pois nenhuma questão foi respondida"
-      render json: err.to_json
+      render json: err.to_json, status: 500
       return
     end
 

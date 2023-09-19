@@ -8,6 +8,11 @@ class Api::V1::RespostaController < ApplicationController
     character_id = params[:character_id]
     series_id = params[:series_id]
     
+    if character_id == nil || series_id == nil
+      render json: "missing params".to_json ,status: 500
+      return
+    end
+
     token = request.headers["Authorization"].split(' ')[1]
     user_hash = JsonWebToken.decode(token)
     user_id = user_hash[:user_id]

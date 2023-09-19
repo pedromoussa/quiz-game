@@ -6,8 +6,8 @@ class TmdbService
 
   API_KEY = "5d1461001d40cb2ec078b29f176d1115"
 
-  def self.fetch_series(page, per_page = 10) # change per_page = 100 later 
-    page = rand(1..99)
+  def self.fetch_series(page = 1, per_page = 20) # change per_page = 100 later ?
+    page = rand(1..30)
     url = URI("https://api.themoviedb.org/3/tv/popular?language=pt-BR&page=#{page}&api_key=#{API_KEY}")
     http = Net::HTTP.new(url.host, url.port)
     http.use_ssl = true

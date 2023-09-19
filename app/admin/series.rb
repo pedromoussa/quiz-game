@@ -15,8 +15,6 @@ ActiveAdmin.register Series do
   filter :nome_pt, as: :string
   filter :nome_origem, as: :string
   filter :pais, as: :select, collection: Series.pluck(:pais).uniq
-  # filter :popularidade, as: :numeric
-  # filter :media_votacao, as: :numeric
 
   filter :popularidade, as: :range_filter, label: "Popularidade Range" do |field|
     field.text_field :q_popularidade_gteq, placeholder: "Popularidade Min"
@@ -29,8 +27,7 @@ ActiveAdmin.register Series do
   end
 
   collection_action :import_series, method: :post do
-    num_series = params[:num_series] || 10 # valor default para testes
-    @series_data = TmdbService.fetch_series(page: 1, per_page: num_series) 
+    @series_data = TmdbService.fetch_series() 
 
     if @series_data.present?
       @series_data.each do |series|
@@ -40,7 +37,7 @@ ActiveAdmin.register Series do
 
         if @cast_data.present?
           @cast_data.each do |character|
-            unless character["nome_personagem"] =~ /^(Self|Host|\s*)$/i
+            unless /self|Self|Host|Announcer/.match(character[:nome_personagem])
               new_series.character.create(character)
             end
           end
