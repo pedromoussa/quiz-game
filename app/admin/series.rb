@@ -69,7 +69,7 @@ ActiveAdmin.register Series do
         end
       end
       row 'Elenco' do
-        link_to 'Ver Elenco', "/admin/characters"
+        link_to 'Ver Elenco', "/admin/characters?utf8=✓&q%5Bseries_id_eq%5D=#{series.id}&commit=Filter&order=id_desc"
       end
     end
   end
