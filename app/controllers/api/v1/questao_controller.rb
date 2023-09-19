@@ -5,7 +5,25 @@ class Api::V1::QuestaoController < ApplicationController
   def questao
     authorize! :questao, :user
 
-    character = Character.order("RAND()").first
+    # verificacao se o usuario ja respondeu alguma questao sobre aquele personagem
+    token = request.headers["Authorization"].split(' ')[1]
+    user_hash = JsonWebToken.decode(token)
+    user_id = user_hash[:user_id]
+
+    answers = UserAnswer.where(user_id: user_id)
+    seen_characters = []
+    if answers.count != 0
+      answers.each do |answer|
+        seen_characters.append(answer.character_id.to_i)
+      end
+    end
+
+    character = nil
+    loop do
+      character = Character.order("RAND()").first
+      break unless seen_characters.include? character.id
+    end
+
     associated_series = Series.find_by(id: character.series_id)
     other_series = Series.where.not(id: associated_series.id).order("RAND()").limit(3)    
 
