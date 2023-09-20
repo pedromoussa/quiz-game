@@ -4,12 +4,12 @@ class Api::V1::LoginController < ApplicationController
 
   def login
 
-    @user = User.find_by_username(params[:username])
-    if @user&.authenticate(params[:password])
+    @user = User.find_by_username(params[:usuario])
+    if @user&.authenticate(params[:senha])
       token = JsonWebToken.encode(user_id: @user.id)
       time = Time.now + 24.hours.to_i
       # render json: { token: token, exp: time.strftime("%m-%d-%Y %H:%M"),
-      #                username: @user.username }, status: :ok
+      #                usuario: @user.usuario }, status: :ok
       render json: { token: token }, status: 200
     else
       render json: { error: 'unauthorized' }, status: 401
@@ -19,7 +19,7 @@ class Api::V1::LoginController < ApplicationController
   private
 
   def login_params
-    params.permit(:username, :password)
+    params.permit(:usuario, :senha)
   end
 
 end
