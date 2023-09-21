@@ -6,7 +6,7 @@ class Series < ApplicationRecord
   validates :media_votacao, presence: true
 
   def to_s
-    nome_origem
+    nome_pt
   end
 
   scope :popularidade_range, ->(min, max) {

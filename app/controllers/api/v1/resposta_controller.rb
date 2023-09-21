@@ -5,8 +5,8 @@ class Api::V1::RespostaController < ApplicationController
   def resposta()
     authorize! :resposta, :user
 
-    character_id = params[:personagem]
-    series_id = params[:serie]
+    character_id = params[:personagem].split(' ')[1]
+    series_id = params[:serie].split(' ')[1]
     
     if character_id == nil || series_id == nil
       render json: "missing params".to_json ,status: 500
@@ -24,7 +24,7 @@ class Api::V1::RespostaController < ApplicationController
       mensagem = { :mensagem => "Parabens, você acertou!" }
       status = 200
     else
-      mensagem = {:mensagem => "Não foi desta vez... A resposta correta era: #{Series.find(series_id)}" }
+      mensagem = {:mensagem => "Não foi desta vez... A resposta correta era: #{Series.find(character[:series_id])}" }
       status = 422
     end
 

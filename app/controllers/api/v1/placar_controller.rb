@@ -19,7 +19,9 @@ class Api::V1::PlacarController < ApplicationController
 
     n_acertos = 0
     respostas.each do |resposta|
-      if resposta.mensagem.start_with? "Parabens"
+      mensagem = resposta[:mensagem]
+      mensagem_text = mensagem.split("=>").last.gsub(/\"/, "").strip
+      if mensagem_text.start_with? "Parabens"
         n_acertos += 1
       end
     end
